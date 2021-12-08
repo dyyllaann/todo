@@ -1,6 +1,6 @@
 export default function header() {
-  document.getElementById("content").insertAdjacentHTML(
-      "beforeend",
+  document.body.insertAdjacentHTML(
+      "afterbegin",
       '\
       <div class="header">\
         <div class="header-left">\
