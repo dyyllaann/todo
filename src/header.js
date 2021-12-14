@@ -7,7 +7,7 @@ export default function header() {
           <p>HEADER LEFT</p>\
         </div>\
         <div class="header-center">\
-          <h1 id="content" style="white-space: pre-wrap;">TODO PROJECT</h1>\
+          <h1 id="header-center" style="white-space: pre-wrap;">TODO PROJECT</h1>\
         </div>\
         <div class="header-right">\
           <!-- Add buttons to initiate auth sequence and sign out -->\
