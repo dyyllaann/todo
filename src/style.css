@@ -20,9 +20,9 @@
   line-height: 1.5;
   margin: 0;
   /* DARK MODE */
-  color:rgba( 255, 255, 255, 0.6 );
+  /* color:rgba( 255, 255, 255, 0.6 ); */
   /* LIGHT MODE */
-  color: #000;
+  /* color: #000; */
 }
 
 body {
@@ -112,20 +112,21 @@ li {
   height: 85vh;
 }
 
-#main {
+.main {
   flex: 2;
   margin: 1vh 5vw;
 }
 
-#main > li {
+.main > li {
   font-weight: 600;
   border: 1px #eee solid;
   border-radius: 10px;
   background-color: #fff;
   padding: 10px;
+  margin: 2px 0;
 }
 
-#main > li:hover {
+.main > li:hover {
     background-color: #fdfdfd;
 }
 
@@ -137,3 +138,24 @@ li {
   min-height: 100%;
 }
 
+.material-icons-outlined {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+#task-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* text-align: center; */
+  font-weight: 400;
+  color: #aaa;
+  cursor: pointer;
+  background-color: #f7f8fa;
+  border: 2px #eee solid;
+}
+
+#task-button:hover {
+  border: 2px #ddd solid;
+  color: #111;
+}

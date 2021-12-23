@@ -27,6 +27,7 @@ function createSidebar() {
 function createMain() {
   // Create main element
   var main = document.createElement("div");
+  main.classList.add("main");
   main.id = "main";
   content.appendChild(main);
 
@@ -89,4 +90,13 @@ function populateMain() {
 
     main.appendChild(li);
   }
+
+  var addTaskButton = document.createElement("li");
+  addTaskButton.id = "task-button";
+  addTaskButton.innerText = "Add a task";
+  main.appendChild(addTaskButton);
+    addTaskButton.insertAdjacentHTML(
+      "afterbegin",
+      '<span class="material-icons-outlined">add_box</span>'
+    );
 }
