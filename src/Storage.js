@@ -25,7 +25,7 @@ function Project(project, dueDate) {
 function Item(title, dueDate) {
   this.title = title;
   this.details = [];
-  this.dueDate = dueDate;
+  this.dueDate = `Due: ${dueDate}`;
   this.id = uuidv4();
 }
 
