@@ -10,6 +10,7 @@ export default function app() {
   populateSidebar();
   createMain();
   populateMain();
+  createCalendar();
 }
 
 function createSidebar() {
@@ -64,6 +65,42 @@ function createMain() {
   var mainTitle = document.createElement("h3");
   mainTitle.innerText = "Tasks";
   main.append(mainTitle);
+}
+
+function createCalendar() {
+  // Create calendar element
+  var calendar = document.createElement("div");
+  calendar.classList.add("calendar");
+  calendar.id = "calendar";
+  content.appendChild(calendar);
+
+  // // Add Calendar title
+  // var title = document.createElement("h3");
+  // title.innerText = "Calendar";
+  // calendar.append(title);
+
+  // Set date
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const d = new Date();
+  const dateString = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+
+  // Print date to DIV
+  var date = document.createElement("h3");
+  date.innerText = dateString;
+  return calendar.append(date);
 }
 
 function populateSidebar() {
@@ -122,7 +159,7 @@ function populateMain() {
 
   var addTaskButton = document.createElement("li");
   addTaskButton.id = "task-button";
-  addTaskButton.innerText = "Add a task";
+  addTaskButton.innerText = "Add Task";
   main.appendChild(addTaskButton);
     addTaskButton.insertAdjacentHTML(
       "afterbegin",
