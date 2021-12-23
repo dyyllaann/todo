@@ -65,33 +65,28 @@ function populateSidebar() {
 
 function populateMain() {
   var main = document.getElementById("main");
+  var todoList = importData()[2].todos;
 
-  var todoItems = importData()[2].todos;
-  // console.log(importData()[2].todos[5].details);
-  // console.log(importData()[2].todos);
-
-  for (var item in todoItems) {
+  for (var item in todoList) {
     // Create li
-    var todoItem = document.createElement("li");
+    var li = document.createElement("li");
 
     // Create dl
-    var todoItemObject = document.createElement("dl");
-    todoItem.appendChild(todoItemObject);
+    var dl = document.createElement("dl");
+    li.appendChild(dl);
 
     // Create dt
-    var todoItemTitle = document.createElement("dt");
-    todoItemTitle.innerText = todoItems[item].title;
-    todoItemObject.appendChild(todoItemTitle);
+    var dt = document.createElement("dt");
+    dt.innerText = todoList[item].title;
+    dl.appendChild(dt);
 
     // Create dd (if any)
-    for (var detail in todoItems[item].details) {
-      console.log(todoItems[item].details[detail]);
-
-      var todoItemDetails = document.createElement("dd");
-      todoItemDetails.innerText = todoItems[item].details[detail];
-      todoItemObject.appendChild(todoItemDetails);
+    for (var detail in todoList[item].details) {
+      var dd = document.createElement("dd");
+      dd.innerText = todoList[item].details[detail];
+      dl.appendChild(dd);
     }
 
-    main.appendChild(todoItem);
+    main.appendChild(li);
   }
 }
