@@ -18,6 +18,12 @@ function createSidebar() {
   sidebar.id = "sidebar";
   content.appendChild(sidebar);
 
+  var profile = document.createElement("div");
+  profile.classList.add("material-icons");
+  profile.innerText = "account_circle";
+  profile.id = "profile";
+  sidebar.appendChild(profile);
+
   // Add sidebar PROJECTS title
   var projectTitle = document.createElement("h3");
   projectTitle.innerText = "PROJECTS";
@@ -97,6 +103,6 @@ function populateMain() {
   main.appendChild(addTaskButton);
     addTaskButton.insertAdjacentHTML(
       "afterbegin",
-      '<span class="material-icons-outlined">add_box</span>'
+      '<span class="material-icons-outlined">add_task</span>'
     );
 }

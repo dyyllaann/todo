@@ -130,6 +130,16 @@ li {
     background-color: #fdfdfd;
 }
 
+#profile {
+  color: coral;
+  font-size: 3.5rem;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  /* text-shadow: 0px 2px 5px #000; */
+
+}
+
 #sidebar {
   /* border-right: 1px solid rgb(35,35,35); */
   width: 15vw;
