@@ -8,7 +8,7 @@ export default function app() {
 
   createSidebar();
   populateSidebar();
-  main();
+  createMain();
   populateMain();
 }
 
@@ -17,20 +17,27 @@ function createSidebar() {
   var sidebar = document.createElement("div");
   sidebar.id = "sidebar";
   content.appendChild(sidebar);
+
+  // Add sidebar PROJECTS title
+  var projectTitle = document.createElement("h3");
+  projectTitle.innerText = "PROJECTS";
+  return sidebar.appendChild(projectTitle);
 }
 
-function main() {
+function createMain() {
   // Create main element
   var main = document.createElement("div");
   main.id = "main";
   content.appendChild(main);
+
+  // Add TO-DOS title
+  var mainTitle = document.createElement("h3");
+  mainTitle.innerText = "Tasks";
+  main.append(mainTitle);
 }
 
 function populateSidebar() {
-  var projectTitle = document.createElement("h3");
-  projectTitle.innerText = "PROJECTS";
-  sidebar.appendChild(projectTitle);
-
+  // Add items in importData()
   for (var item in importData()) {
     var project = document.createElement("li");
     project.classList.add("project-title");
@@ -39,10 +46,14 @@ function populateSidebar() {
     sidebar.appendChild(project);
   }
 
-  var projectList = document.getElementById("sidebar");
-  var projects = projectList.getElementsByClassName("project-title");
-  projects[0].classList.add("active");
+  // Set initial project as active by default
+  {
+    var projectList = document.getElementById("sidebar");
+    var projects = projectList.getElementsByClassName("project-title");
+    projects[0].classList.add("active");
+  }
 
+  // Active selector
   for (var i = 0; i < projects.length; i++) {
     projects[i].addEventListener("click", function () {
       var current = document.getElementsByClassName("active");
@@ -54,17 +65,33 @@ function populateSidebar() {
 
 function populateMain() {
   var main = document.getElementById("main");
-  
-  var mainTitle = document.createElement("h3");
-  mainTitle.innerText = "TO-DOS";
-  main.append(mainTitle);
 
   var todoItems = importData()[2].todos;
+  // console.log(importData()[2].todos[5].details);
+  // console.log(importData()[2].todos);
 
   for (var item in todoItems) {
-    var project = document.createElement("li");
-    // project.id = importData()[0].id;
-    project.innerText = todoItems[item];
-    main.appendChild(project);
+    // Create li
+    var todoItem = document.createElement("li");
+
+    // Create dl
+    var todoItemObject = document.createElement("dl");
+    todoItem.appendChild(todoItemObject);
+
+    // Create dt
+    var todoItemTitle = document.createElement("dt");
+    todoItemTitle.innerText = todoItems[item].title;
+    todoItemObject.appendChild(todoItemTitle);
+
+    // Create dd (if any)
+    for (var detail in todoItems[item].details) {
+      console.log(todoItems[item].details[detail]);
+
+      var todoItemDetails = document.createElement("dd");
+      todoItemDetails.innerText = todoItems[item].details[detail];
+      todoItemObject.appendChild(todoItemDetails);
+    }
+
+    main.appendChild(todoItem);
   }
 }
