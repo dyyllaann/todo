@@ -24,10 +24,33 @@ function createSidebar() {
   profile.id = "profile";
   sidebar.appendChild(profile);
 
-  // Add sidebar PROJECTS title
+  // Add sidebar TAGS section
+  var tagTitle = document.createElement("h3");
+  tagTitle.innerText = "Tags";
+  tagTitle.id = "tags";
+  tagTitle.insertAdjacentHTML(
+    "afterbegin",
+    '<span class="material-icons">tag</span>'
+  );
+  tagTitle.insertAdjacentHTML(
+    "beforeend",
+    '<span class="material-icons-outlined" id="down-arrow">expand_more</span>'
+  );
+  sidebar.appendChild(tagTitle);
+
+  // Add sidebar PROJECTS section
   var projectTitle = document.createElement("h3");
-  projectTitle.innerText = "PROJECTS";
-  return sidebar.appendChild(projectTitle);
+  projectTitle.innerText = "Projects";
+  projectTitle.id = "projects";
+  projectTitle.insertAdjacentHTML(
+    "afterbegin",
+    '<span class="material-icons">folder</span>'
+  );
+  projectTitle.insertAdjacentHTML(
+    "beforeend",
+    '<span class="material-icons-outlined" id="down-arrow">expand_more</span>'
+  );
+  sidebar.appendChild(projectTitle);
 }
 
 function createMain() {
