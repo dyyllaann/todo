@@ -1,3 +1,4 @@
+import { differenceInCalendarQuarters } from "date-fns";
 import importData from "./Storage.js";
 
 export default function app() {
@@ -100,7 +101,35 @@ function createCalendar() {
   // Print date to DIV
   var date = document.createElement("h3");
   date.innerText = dateString;
-  return calendar.append(date);
+  calendar.appendChild(date);
+
+  // Print times of day
+  var tableDiv = document.createElement("div");
+    {
+    var table = document.createElement("table");
+    table.id = "calendarTable";
+    for (var start = 0; start < 24; start++) {
+      var hour = new Date();
+      hour.setHours(start);
+
+      var ampm;
+      if (start < 12) {
+        ampm = "am";
+      } else { ampm = "pm"}
+
+      var tr = document.createElement("tr");
+      tr.classList.add("timegrid");
+      if (hour.getHours() % 12 == 0) {
+        tr.innerText = `12${ampm}`;
+      } else {
+        tr.innerText = `${hour.getHours() % 12}${ampm}`;
+      }
+
+      table.appendChild(tr);
+    }
+    tableDiv.appendChild(table)
+    }
+  calendar.appendChild(tableDiv);
 }
 
 function populateSidebar() {
