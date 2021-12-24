@@ -227,3 +227,7 @@ li {
   border: 1px #6444db solid;
   color: #6444db;
 }
+
+.task-button-active {
+  background-color: #fff;
+}
