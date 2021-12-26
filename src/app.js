@@ -24,7 +24,7 @@ function createUserInput() {
     {
       var inputSave = document.createElement("button");
       inputSave.innerText = "Save";
-      inputCancel.onclick = function () {
+      inputSave.onclick = function () {
         document.getElementById("user-input-container").remove();
       };
       userInputLi.appendChild(inputSave);
