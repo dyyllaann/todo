@@ -96,10 +96,9 @@ li {
   text-align: center;
 }
 
-.main {
+/* .main {
   flex: 2;
-  margin: 0 5vw;
-}
+} */
 
 .main > li {
   font-weight: 600;
@@ -112,6 +111,11 @@ li {
 
 .main > li:hover {
     background-color: #fdfdfd;
+}
+
+.main-container {
+  flex: 2;
+  margin: 0 5vw;
 }
 
 .material-icons-outlined {

@@ -1,20 +1,51 @@
 import importData from "./Storage.js";
 
-function createMain() {
+function createMainContainer() {
   // Create main TASKS section
   var main = document.createElement("div");
-  main.classList.add("main");
+  main.classList.add("main-container");
   main.id = "main";
   content.appendChild(main);
+}
 
-  // Add TO-DOS title
-  var mainTitle = document.createElement("h3");
-  mainTitle.innerText = "Tasks";
-  main.append(mainTitle);
+function createMain() {
+  // Add "Tasks" title DIV
+  var titleDiv = document.createElement("div");
+  titleDiv.classList.add("main");
+  {
+    var mainTitle = document.createElement("h3");
+    mainTitle.innerText = "Tasks";
+    titleDiv.appendChild(mainTitle);
+  }
+  main.appendChild(titleDiv);
+
+  // Add taskList section
+  var taskList = document.createElement("div");
+  taskList.classList.add("main");
+  taskList.id = "task-list";
+  main.appendChild(taskList);
+
+  // Add "Add Task" button div
+  var taskButtonDiv = document.createElement("div");
+  taskButtonDiv.classList.add("main");
+  {
+    var addTaskButton = document.createElement("li");
+    addTaskButton.id = "task-button";
+    addTaskButton.innerText = "Add Task";
+
+    taskButtonDiv.appendChild(addTaskButton);
+
+    // Add icon
+    addTaskButton.insertAdjacentHTML(
+      "afterbegin",
+      '<i class="material-icons-outlined">add_task</i>'
+    );
+  }
+  main.appendChild(taskButtonDiv);
 }
 
 function populateMain() {
-  var main = document.getElementById("main");
+  var taskList = document.getElementById("task-list");
   var todoList = importData()[2].todos;
 
   for (var item in todoList) {
@@ -37,20 +68,12 @@ function populateMain() {
       dl.appendChild(dd);
     }
 
-    main.appendChild(li);
+    taskList.appendChild(li);
   }
-
-  var addTaskButton = document.createElement("li");
-  addTaskButton.id = "task-button";
-  addTaskButton.innerText = "Add Task";
-  main.appendChild(addTaskButton);
-    addTaskButton.insertAdjacentHTML(
-      "afterbegin",
-      '<span class="material-icons-outlined">add_task</span>'
-    );
 }
 
 export default function app() {
+  createMainContainer();
   createMain();
   populateMain();
 }
