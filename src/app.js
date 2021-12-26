@@ -1,5 +1,51 @@
 import importData from "./Storage.js";
 
+function createUserInput() {
+  var userInputDiv = document.createElement("div");
+  userInputDiv.classList.add("main");
+  userInputDiv.id = "user-input-container";
+  {
+    var userInputLi = document.createElement("li");
+    userInputLi.id = "user-input";
+    {
+      var inputTitle = document.createElement("input");
+      inputTitle.type = "text";
+      inputTitle.id = "input-title";
+      userInputLi.appendChild(inputTitle);
+    }
+    {
+      var inputCancel = document.createElement("button");
+      inputCancel.innerText = "Cancel";
+      inputCancel.onclick = function() { 
+        document.getElementById("user-input-container").remove() 
+      };
+      userInputLi.appendChild(inputCancel);
+    }
+    {
+      var inputSave = document.createElement("button");
+      inputSave.innerText = "Save";
+      inputCancel.onclick = function () {
+        document.getElementById("user-input-container").remove();
+      };
+      userInputLi.appendChild(inputSave);
+    }
+    userInputDiv.appendChild(userInputLi);
+  }
+  main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
+}
+
+// .remove() monkey patch
+Element.prototype.remove = function () {
+  this.parentElement.removeChild(this);
+};
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
+  for (var i = this.length - 1; i >= 0; i--) {
+    if (this[i] && this[i].parentElement) {
+      this[i].parentElement.removeChild(this[i]);
+    }
+  }
+};
+
 function createMainContainer() {
   // Create main TASKS section
   var main = document.createElement("div");
@@ -32,7 +78,7 @@ function createMain() {
     var addTaskButton = document.createElement("li");
     addTaskButton.id = "task-button";
     addTaskButton.innerText = "Add Task";
-
+    addTaskButton.onclick = function() { createUserInput() };
     taskButtonDiv.appendChild(addTaskButton);
 
     // Add icon
