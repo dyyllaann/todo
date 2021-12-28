@@ -1,5 +1,6 @@
 import importData from "./Storage.js";
 import Item from "./Todo-logic.js";
+import Project from "./Project-logic.js";
 
 // .remove() monkey patch
 Element.prototype.remove = function () {
