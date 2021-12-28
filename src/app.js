@@ -1,4 +1,17 @@
 import importData from "./Storage.js";
+import Item from "./Todo-logic.js";
+
+// .remove() monkey patch
+Element.prototype.remove = function () {
+  this.parentElement.removeChild(this);
+};
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
+  for (var i = this.length - 1; i >= 0; i--) {
+    if (this[i] && this[i].parentElement) {
+      this[i].parentElement.removeChild(this[i]);
+    }
+  }
+};
 
 function createUserInput() {
   var userInputDiv = document.createElement("div");
@@ -25,6 +38,11 @@ function createUserInput() {
       var inputSave = document.createElement("button");
       inputSave.innerText = "Save";
       inputSave.onclick = function () {
+        var input = document.getElementById("input-title").value;
+        var temp = new Item(input);
+        temp.push();
+        var item = importData()[2].todos[importData()[2].todos.length - 1];
+        addListItem(item);
         document.getElementById("user-input-container").remove();
       };
       userInputLi.appendChild(inputSave);
@@ -33,18 +51,6 @@ function createUserInput() {
   }
   main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
 }
-
-// .remove() monkey patch
-Element.prototype.remove = function () {
-  this.parentElement.removeChild(this);
-};
-NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
-  for (var i = this.length - 1; i >= 0; i--) {
-    if (this[i] && this[i].parentElement) {
-      this[i].parentElement.removeChild(this[i]);
-    }
-  }
-};
 
 function createMainContainer() {
   // Create main TASKS section
@@ -90,31 +96,39 @@ function createMain() {
   main.appendChild(taskButtonDiv);
 }
 
-function populateMain() {
+function addListItem(item) {
   var taskList = document.getElementById("task-list");
+  // var todoList = importData()[project].todos;
+
+  // Create li
+  var li = document.createElement("li");
+
+  // Create dl
+  var dl = document.createElement("dl");
+  li.appendChild(dl);
+
+  // Create dt
+  var dt = document.createElement("dt");
+  dt.innerText = item.title;
+  dl.appendChild(dt);
+
+  // Create dd (if any)
+  for (var detail in item.details) {
+    var dd = document.createElement("dd");
+    dd.innerText = item.details[detail];
+    dl.appendChild(dd);
+  }
+
+  taskList.appendChild(li);
+}
+
+function populateMain() {
+  // var taskList = document.getElementById("task-list");
   var todoList = importData()[2].todos;
 
   for (var item in todoList) {
-    // Create li
-    var li = document.createElement("li");
-
-    // Create dl
-    var dl = document.createElement("dl");
-    li.appendChild(dl);
-
-    // Create dt
-    var dt = document.createElement("dt");
-    dt.innerText = todoList[item].title;
-    dl.appendChild(dt);
-
-    // Create dd (if any)
-    for (var detail in todoList[item].details) {
-      var dd = document.createElement("dd");
-      dd.innerText = todoList[item].details[detail];
-      dl.appendChild(dd);
-    }
-
-    taskList.appendChild(li);
+    addListItem(todoList[item]);
+    // console.log(item);
   }
 }
 
