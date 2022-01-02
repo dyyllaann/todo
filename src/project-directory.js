@@ -1,4 +1,4 @@
-import importData from "./Storage.js";
+import Storage from "./Storage.js";
 
 function createSidebar() {
   // Create content left sidebar
@@ -43,13 +43,14 @@ function createSidebar() {
 
 function populateSidebar() {
   const sidebar = document.getElementById("sidebar");
+  const projectData = Storage().get();
 
   // Add items in importData()
-  for (var item in importData()) {
+  for (var item in projectData) {
     var project = document.createElement("li");
     project.classList.add("project-title");
-    project.id = importData()[item].id;
-    project.innerText = importData()[item].project;
+    project.id = projectData[item].id;
+    project.innerText = projectData[item].project;
     sidebar.appendChild(project);
   }
 

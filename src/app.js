@@ -1,6 +1,7 @@
 import importData from "./Storage.js";
 import Item from "./Todo-logic.js";
 import Project from "./Project-logic.js";
+import Storage from "./Storage.js";
 
 // .remove() monkey patch
 Element.prototype.remove = function () {
@@ -13,6 +14,30 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
     }
   }
 };
+
+// Set data const
+Storage().set(new Project("Todo List 1", "12-12-2021"));
+Storage().set(new Project("Todo List 2", "12-12-2021"));
+
+function createDefaultItems() {
+  var testItem1 = new Item("Work on app", "December 20, 2021");
+  testItem1.details.push("www.thisisyourapp.com", "URGENT");
+
+  var testItem2 = new Item("Go to the store", "December 20, 2021");
+  testItem2.details.push("Milk", "Eggs", "Cheese");
+
+  var testItem3 = new Item("Hang out with Sarah", "December 20, 2021");
+  testItem3.details.push("Drive to Portland.", "Meet at Hotel.");
+
+  Storage().addTask(testItem1, 0);
+  Storage().addTask(testItem2, 0);
+  Storage().addTask(testItem3, 0);
+}
+
+createDefaultItems();
+
+const data = Storage().get();
+Storage().inspect();
 
 function createUserInput() {
   var userInputDiv = document.createElement("div");
@@ -42,7 +67,7 @@ function createUserInput() {
         var input = document.getElementById("input-title").value;
         var temp = new Item(input);
         temp.push();
-        var item = importData()[2].todos[importData()[2].todos.length - 1];
+        var item = data.todos[data.todos.length - 1];
         addListItem(item);
         document.getElementById("user-input-container").remove();
       };
@@ -125,7 +150,7 @@ function addListItem(item) {
 
 function populateMain() {
   // var taskList = document.getElementById("task-list");
-  var todoList = importData()[2].todos;
+  var todoList = data[0].todos;
 
   for (var item in todoList) {
     addListItem(todoList[item]);
