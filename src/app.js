@@ -1,4 +1,3 @@
-import importData from "./Storage.js";
 import Item from "./Todo-logic.js";
 import Project from "./Project-logic.js";
 import Storage from "./Storage.js";
@@ -15,27 +14,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
   }
 };
 
-// Set data const
-Storage().set(new Project("Todo List 1", "12-12-2021"));
-Storage().set(new Project("Todo List 2", "12-12-2021"));
-
-function createDefaultItems() {
-  var testItem1 = new Item("Work on app", "December 20, 2021");
-  testItem1.details.push("www.thisisyourapp.com", "URGENT");
-
-  var testItem2 = new Item("Go to the store", "December 20, 2021");
-  testItem2.details.push("Milk", "Eggs", "Cheese");
-
-  var testItem3 = new Item("Hang out with Sarah", "December 20, 2021");
-  testItem3.details.push("Drive to Portland.", "Meet at Hotel.");
-
-  Storage().addTask(testItem1, 0);
-  Storage().addTask(testItem2, 0);
-  Storage().addTask(testItem3, 0);
-}
-
-createDefaultItems();
-
+Storage().init();
 const data = Storage().get();
 Storage().inspect();
 
@@ -66,9 +45,11 @@ function createUserInput() {
       inputSave.onclick = function () {
         var input = document.getElementById("input-title").value;
         var temp = new Item(input);
-        temp.push();
-        var item = data.todos[data.todos.length - 1];
+        Storage().addTask(temp, 0);
+        var item = Storage().get()[0].todos[Storage().get()[0].todos.length - 1];
         addListItem(item);
+        // console.log(Storage().get());
+        Storage().inspect();
         document.getElementById("user-input-container").remove();
       };
       userInputLi.appendChild(inputSave);
