@@ -29,30 +29,35 @@ function createUserInput() {
       var inputTitle = document.createElement("input");
       inputTitle.type = "text";
       inputTitle.id = "input-title";
+      inputTitle.placeholder = "Enter task name..."
       userInputLi.appendChild(inputTitle);
     }
     {
-      var inputCancel = document.createElement("button");
-      inputCancel.innerText = "Cancel";
-      inputCancel.onclick = function() { 
-        document.getElementById("user-input-container").remove() 
+      var buttonDiv = document.createElement("div");
+      {
+        var inputCancel = document.createElement("button");
+        inputCancel.innerText = "Cancel";
+        inputCancel.onclick = function() { 
+          document.getElementById("user-input-container").remove() 
+        };
+        buttonDiv.appendChild(inputCancel);
+      }
+      {
+        var inputSave = document.createElement("button");
+        inputSave.innerText = "Save";
+        inputSave.onclick = function () {
+          var input = document.getElementById("input-title").value;
+          var temp = new Item(input);
+          Storage().addTask(temp, 0);
+          var item = Storage().get()[0].todos[Storage().get()[0].todos.length - 1];
+          addListItem(item);
+          // console.log(Storage().get());
+          Storage().inspect();
+          document.getElementById("user-input-container").remove();
+        };
+        buttonDiv.appendChild(inputSave);
       };
-      userInputLi.appendChild(inputCancel);
-    }
-    {
-      var inputSave = document.createElement("button");
-      inputSave.innerText = "Save";
-      inputSave.onclick = function () {
-        var input = document.getElementById("input-title").value;
-        var temp = new Item(input);
-        Storage().addTask(temp, 0);
-        var item = Storage().get()[0].todos[Storage().get()[0].todos.length - 1];
-        addListItem(item);
-        // console.log(Storage().get());
-        Storage().inspect();
-        document.getElementById("user-input-container").remove();
-      };
-      userInputLi.appendChild(inputSave);
+      userInputLi.appendChild(buttonDiv);
     }
     userInputDiv.appendChild(userInputLi);
   }

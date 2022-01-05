@@ -35,6 +35,13 @@ body {
   background: #f6f7f9;
 }
 
+button {
+  margin: 5px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+}
+
 dd {
   color: #aaa;
   font-size: 0.85rem;
@@ -89,7 +96,8 @@ li {
 
 .complete {
   text-decoration: line-through;
-  text-decoration-color: #6444db;
+  text-decoration-color: #7864c2;
+  color: #aaa;
 }
 
 .header {
@@ -180,6 +188,14 @@ li {
   margin-left: auto;
 }
 
+#input-title {
+  width: 98%;
+  padding: 1%;
+  outline: none;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+}
+
 #profile {
   color: coral;
   font-size: 3.5rem;
@@ -235,6 +251,15 @@ li {
 #task-button:hover {
   border: 1px #6444db solid;
   color: #6444db;
+}
+
+#user-input {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+::placeholder {
+  font-style: italic;
 }
 
 .task-button-active {
