@@ -117,6 +117,10 @@ function addListItem(item) {
   // Create dt
   var dt = document.createElement("dt");
   dt.innerText = item.title;
+  dt.onclick = function() {
+    Storage().deleteTask(item.id, 0);
+    this.className += "complete";
+  }
   dl.appendChild(dt);
 
   // Create dd (if any)

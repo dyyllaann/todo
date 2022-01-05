@@ -87,6 +87,11 @@ li {
   justify-content: center;
 }
 
+.complete {
+  text-decoration: line-through;
+  text-decoration-color: #6444db;
+}
+
 .header {
   padding: 0 0.5%;
   height: 10vh;

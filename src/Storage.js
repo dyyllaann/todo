@@ -48,6 +48,15 @@ export default function Storage() {
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
+  const deleteTask = function (task, idx) {
+    const array = JSON.parse(localStorage.getItem("projects"));
+    array[idx].todos = array[idx].todos.filter(function (obj) {
+      return obj.id !== task;
+    });
+    console.log(array[idx]);
+    return localStorage.setItem("projects", JSON.stringify(array));
+  }
+
   const inspect = function () {
     console.log(this.get());
   }
@@ -56,5 +65,5 @@ export default function Storage() {
     return localStorage.clear();
   }
 
-  return {init, get, set, addTask, inspect, clear};
+  return {init, get, set, addTask, deleteTask, inspect, clear};
 }

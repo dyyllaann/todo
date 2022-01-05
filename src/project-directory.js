@@ -1,5 +1,9 @@
 import Storage from "./Storage.js";
 
+/* 
+// Default TODO list can be Storage().get()[0], then every project after can get added to the project directory. 
+*/
+
 function createSidebar() {
   // Create content left sidebar
   var sidebar = document.createElement("div");
