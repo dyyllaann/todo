@@ -1,5 +1,4 @@
 import Item from "./Todo-logic.js";
-// import Project from "./Project-logic.js";
 import Storage from "./Storage.js";
 
 // .remove() monkey patch
@@ -16,7 +15,6 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
 
 Storage().init();
 const data = Storage().get();
-// Storage().inspect();
 
 function createUserInput() {
   var userInputDiv = document.createElement("div");
@@ -29,7 +27,7 @@ function createUserInput() {
       var inputTitle = document.createElement("input");
       inputTitle.type = "text";
       inputTitle.id = "input-title";
-      inputTitle.placeholder = "Enter task name..."
+      inputTitle.placeholder = "Enter task name...";
       userInputLi.appendChild(inputTitle);
     }
     {
@@ -37,23 +35,18 @@ function createUserInput() {
       {
         var inputCancel = document.createElement("button");
         inputCancel.innerText = "Cancel";
-        inputCancel.onclick = function() { 
-          document.getElementById("user-input-container").remove();
-        };
+        inputCancel.onclick = function () { removeUserInput(); };
         buttonDiv.appendChild(inputCancel);
       }
       {
         var inputSave = document.createElement("button");
+        inputSave.id = "input-save";
         inputSave.innerText = "Save";
+
         inputSave.onclick = function () {
-          var input = document.getElementById("input-title").value;
-          Storage().addTask(new Item(input));
-          const projects = Storage().get();
-          const current = Storage().getActive();
-          const item = projects[current].todos[projects[current].todos.length - 1];
-          app().refresh(current);
-          // Remove user input field (Alternative: toggle user-input-container visible/hidden)
-          document.getElementById("user-input-container").remove();
+          Storage().addTask(new Item(inputTitle.value));
+          app().refresh();
+          removeUserInput();
         };
         buttonDiv.appendChild(inputSave);
       }
@@ -62,6 +55,22 @@ function createUserInput() {
     userInputDiv.appendChild(userInputLi);
   }
   main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
+
+  // Keyup event for inputSave
+  inputTitle.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      inputSave.click();
+    } else 
+    if (event.keyCode === 27) {
+      event.preventDefault();
+      inputCancel.click();
+    }
+  });
+}
+
+function removeUserInput() {
+  document.getElementById("user-input-container").remove();
 }
 
 function createMainContainer() {
@@ -94,6 +103,7 @@ function createMain() {
   var taskButtonDiv = document.createElement("div");
   taskButtonDiv.classList.add("main");
   {
+    // Create button
     var addTaskButton = document.createElement("li");
     addTaskButton.id = "task-button";
     addTaskButton.innerText = "Add Task";
@@ -110,7 +120,9 @@ function createMain() {
 }
 
 function addListItem(item) {
+  // Get taskList
   var taskList = document.getElementById("task-list");
+
   // Create li
   var li = document.createElement("li");
 
@@ -121,11 +133,14 @@ function addListItem(item) {
   // Create dt
   var dt = document.createElement("dt");
   dt.innerText = item.title;
+
   // Add "complete" onclick function
   dt.onclick = function() {
     Storage().deleteTask(item.id);
     this.className += "complete";
+    setTimeout( () => { app().refresh(); }, 1000);    
   };
+
   dl.appendChild(dt);
 
   // Create dd (details) (if any)
@@ -134,20 +149,24 @@ function addListItem(item) {
     dd.innerText = item.details[detail];
     dl.appendChild(dd);
   }
+
   taskList.appendChild(li);
 }
 
 function populateMain(current) {
-  var taskList = data[current].todos;
+  var taskList = Storage().get()[current].todos;
   for (var item in taskList) {
     addListItem(taskList[item]);
   }
+  // console.log(data[current].todos);
+  console.log(Storage().get()[current].todos);
 }
 
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
   }
+  console.log("Child nodes removed.");
 }
 
 export default function app() {
@@ -157,10 +176,12 @@ export default function app() {
     populateMain(0); // Populate Main with tasks from first project
   };
 
-  const refresh = function (current) {
+  const refresh = function () {
+    const current = Storage().getActive();
     const main = document.getElementById("task-list");
     removeAllChildNodes(main);
     populateMain(current);
+    // console.log(Storage().get()[current].todos);
     console.log("refreshed task-list");
   }
 
