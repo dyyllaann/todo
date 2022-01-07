@@ -1,4 +1,6 @@
 import Storage from "./Storage.js";
+import Project from "./Project-logic.js";
+import app from "./app.js";
 
 /* 
 // Default TODO list can be Storage().get()[0], then every project after can get added to the project directory. 
@@ -43,6 +45,72 @@ function createSidebar() {
     '<span class="material-icons-outlined" id="down-arrow">expand_more</span>'
   );
   sidebar.appendChild(projectTitle);
+
+  // Add sidebar PROJECTS div
+  var projectsContainer = document.createElement("div");
+  projectsContainer.id = "projects-container";
+  sidebar.appendChild(projectsContainer);
+
+  // Add "Add New" button
+  var addNew = document.createElement("li");
+  addNew.classList.add("add-button");
+  addNew.innerText = 'Add New';
+  addNew.onclick = function () {
+    createProjectInput();
+  };
+  sidebar.appendChild(addNew);
+}
+
+function createProjectInput() {
+  const projectInput = document.createElement("div");
+  projectInput.classList.add("project-input");
+  projectInput.id = "project-input-container";
+  {
+    const projectInputLi = document.createElement("li");
+    projectInputLi.id = "projectInput-input";
+    {
+      const inputTitle = document.createElement("input");
+      inputTitle.type = "text";
+      inputTitle.id = "project-input-title";
+      inputTitle.placeholder = "Enter project name...";
+      projectInputLi.appendChild(inputTitle);
+    }
+    {
+      const buttonDiv = document.createElement("div");
+      {
+        const inputCancel = document.createElement("button");
+        inputCancel.innerText = "Cancel";
+        inputCancel.onclick = function () {
+          document.getElementById("project-input-container").remove();
+        };
+        buttonDiv.appendChild(inputCancel);
+      }
+      {
+        var inputSave = document.createElement("button");
+        inputSave.innerText = "Save";
+        inputSave.onclick = function () {
+          const projectsContainer = document.getElementById("projects-container");
+          const projectTitle = document.getElementById("project-input-title").value;
+
+          Storage().addProject(new Project(projectTitle));
+
+          // This part doesn't work... why?!
+          const project = document.createElement("li");
+          project.classList.add("project-title");
+          project.innterText = projectTitle;
+          projectsContainer.appendChild(project);
+
+          // Remove user input field (Alternative: toggle user-input-container visible/hidden)
+          document.getElementById("project-input-container").remove();
+        };
+        buttonDiv.appendChild(inputSave);
+      }
+      projectInputLi.appendChild(buttonDiv);
+    }
+    projectInput.appendChild(projectInputLi);
+  }
+  const projects = document.getElementById("projects-container");
+  projects.appendChild(projectInput);
 }
 
 function populateSidebar() {
@@ -51,11 +119,12 @@ function populateSidebar() {
 
   // Add items in importData()
   for (var item in projectData) {
+    const projectsContainer = document.getElementById("projects-container");
     var project = document.createElement("li");
     project.classList.add("project-title");
     project.id = projectData[item].id;
     project.innerText = projectData[item].project;
-    sidebar.appendChild(project);
+    projectsContainer.appendChild(project);
   }
 
   // Set initial project as active by default
@@ -63,6 +132,7 @@ function populateSidebar() {
     var projectList = document.getElementById("sidebar");
     var projects = projectList.getElementsByClassName("project-title");
     projects[0].classList.add("active");
+    Storage().setActive(0);
   }
 
   // Active selector
@@ -71,7 +141,20 @@ function populateSidebar() {
       var current = document.getElementsByClassName("active");
       current[0].className = current[0].className.replace(" active", "");
       this.className += " active";
+
+      projectSelector();
+      console.log(Storage().get()[Storage().getActive()]);
+      app().refresh(Storage().getActive());
     });
+  }
+}
+
+function projectSelector() {
+  const projectsContainer = document.getElementById("projects-container");
+  for (let i = 0; i < projectsContainer.children.length; i++) {
+    if (projectsContainer.children[i].classList.contains("active")) {
+      return Storage().setActive(i);
+    }
   }
 }
 

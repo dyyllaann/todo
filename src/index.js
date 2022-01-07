@@ -9,5 +9,5 @@ import sidebar from "./project-directory.js";
 
 header();
 sidebar();
-app();
+app().init();
 calendar();

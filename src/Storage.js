@@ -11,18 +11,14 @@ function createDefaultItems() {
   Storage().set(new Project("Todo List 2", "12-12-2021"));
 
   // Set default Tasks
-  var testItem1 = new Item("Work on app", "December 20, 2021");
-  testItem1.details.push("www.thisisyourapp.com", "URGENT");
+  var testItem1 = new Item("Welcome to TaskEasy!");
+  testItem1.details.push("www.dylanjames.is", "www.github.com/dylanjames", "<- Check out the creator");
 
   var testItem2 = new Item("Go to the store", "December 20, 2021");
   testItem2.details.push("Milk", "Eggs", "Cheese");
 
-  var testItem3 = new Item("Hang out with Sarah", "December 20, 2021");
-  testItem3.details.push("Drive to Portland.", "Meet at Hotel.");
-
   Storage().addTask(testItem1, 0);
   Storage().addTask(testItem2, 0);
-  Storage().addTask(testItem3, 0);
 }
 
 export default function Storage() {
@@ -30,6 +26,14 @@ export default function Storage() {
     if (get() == null) {
       return createDefaultItems();
     }
+  }
+
+  const getActive = function () {
+    return JSON.parse(localStorage.getItem("active")) || 0;
+  }
+
+  const setActive = function (active) {
+    return localStorage.setItem("active", JSON.stringify(active));
   }
 
   const get = function () {
@@ -42,18 +46,24 @@ export default function Storage() {
     return localStorage.setItem("projects", JSON.stringify(a));
   }
 
-  const addTask = function (task, idx) {
+  const addProject = function (project) {
     const array = JSON.parse(localStorage.getItem("projects"));
-    array[idx].todos.push(task);
+    array.push(project);
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
-  const deleteTask = function (task, idx) {
+  const addTask = function (task) {
     const array = JSON.parse(localStorage.getItem("projects"));
-    array[idx].todos = array[idx].todos.filter(function (obj) {
+    array[getActive()].todos.push(task);
+    return localStorage.setItem("projects", JSON.stringify(array));
+  }
+
+  const deleteTask = function (task) {
+    const array = JSON.parse(localStorage.getItem("projects"));
+    array[getActive()].todos = array[getActive()].todos.filter(function (obj) {
       return obj.id !== task;
     });
-    console.log(array[idx]);
+    console.log(array[getActive()]);
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
@@ -65,5 +75,25 @@ export default function Storage() {
     return localStorage.clear();
   }
 
-  return {init, get, set, addTask, deleteTask, inspect, clear};
+  return {
+    // Initiate object
+    init,
+
+    // Get & set
+    get, 
+    set, 
+    getActive,
+    setActive,
+
+    // Project commands
+    addProject, 
+
+    // Item commands
+    addTask, 
+    deleteTask, 
+
+    // Utility commands
+    inspect, 
+    clear
+  };
 }
