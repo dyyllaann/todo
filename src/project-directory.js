@@ -2,10 +2,6 @@ import Storage from "./Storage.js";
 import Project from "./Project-logic.js";
 import app from "./app.js";
 
-/* 
-// Default TODO list can be Storage().get()[0], then every project after can get added to the project directory. 
-*/
-
 function createSidebar() {
   // Create content left sidebar
   var sidebar = document.createElement("div");
@@ -113,18 +109,34 @@ function createProjectInput() {
   projects.appendChild(projectInput);
 }
 
+function addProjectItem(item) {
+  const projectsContainer = document.getElementById("projects-container");
+  const projectData = Storage().get();
+
+  var project = document.createElement("li");
+  project.classList.add("project-title");
+  project.id = projectData[item].id;
+  project.innerText = projectData[item].project;
+  projectsContainer.appendChild(project);
+
+     project.insertAdjacentHTML(
+       "afterbegin",
+       '<span class="material-icons icon-left color-label">circle</span>'
+     );
+
+   project.insertAdjacentHTML(
+     "beforeend",
+     '<span class="material-icons-outlined icon-right" id="project-delete-button">clear</span>'
+   );
+}
+
 function populateSidebar() {
   const sidebar = document.getElementById("sidebar");
   const projectData = Storage().get();
 
   // Add items in importData()
   for (var item in projectData) {
-    const projectsContainer = document.getElementById("projects-container");
-    var project = document.createElement("li");
-    project.classList.add("project-title");
-    project.id = projectData[item].id;
-    project.innerText = projectData[item].project;
-    projectsContainer.appendChild(project);
+    addProjectItem(item);
   }
 
   // Set initial project as active by default
@@ -159,6 +171,10 @@ function projectSelector() {
 }
 
 export default function sidebar() {
-  createSidebar();
-  populateSidebar();
+  const init = function() {
+    createSidebar();
+    populateSidebar();
+  }
+
+  return { init };
 }

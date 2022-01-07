@@ -6,7 +6,7 @@ Element.prototype.remove = function () {
   this.parentElement.removeChild(this);
 };
 NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
-  for (var i = this.length - 1; i >= 0; i--) {
+  for (let i = this.length - 1; i >= 0; i--) {
     if (this[i] && this[i].parentElement) {
       this[i].parentElement.removeChild(this[i]);
     }
@@ -17,29 +17,29 @@ Storage().init();
 const data = Storage().get();
 
 function createUserInput() {
-  var userInputDiv = document.createElement("div");
+  const userInputDiv = document.createElement("div");
   userInputDiv.classList.add("main");
   userInputDiv.id = "user-input-container";
   {
-    var userInputLi = document.createElement("li");
+    const userInputLi = document.createElement("li");
     userInputLi.id = "user-input";
     {
-      var inputTitle = document.createElement("input");
+      const inputTitle = document.createElement("input");
       inputTitle.type = "text";
       inputTitle.id = "input-title";
       inputTitle.placeholder = "Enter task name...";
       userInputLi.appendChild(inputTitle);
-    }
-    {
-      var buttonDiv = document.createElement("div");
+
+      const buttonDiv = document.createElement("div");
       {
-        var inputCancel = document.createElement("button");
+        const inputCancel = document.createElement("button");
         inputCancel.innerText = "Cancel";
-        inputCancel.onclick = function () { removeUserInput(); };
+        inputCancel.onclick = function () {
+          removeUserInput();
+        };
         buttonDiv.appendChild(inputCancel);
-      }
-      {
-        var inputSave = document.createElement("button");
+
+        const inputSave = document.createElement("button");
         inputSave.id = "input-save";
         inputSave.innerText = "Save";
 
@@ -51,22 +51,23 @@ function createUserInput() {
         buttonDiv.appendChild(inputSave);
       }
       userInputLi.appendChild(buttonDiv);
+
+      // Add keyup events
+      inputTitle.addEventListener("keyup", function (event) {
+        const inputSave = document.getElementById("input-save"); 
+        const inputCancel = document.getElementById("input-cancel");
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          inputSave.click();
+        } else if (event.keyCode === 27) {
+          event.preventDefault();
+          inputCancel.click();
+        }
+      });
     }
     userInputDiv.appendChild(userInputLi);
   }
   main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
-
-  // Keyup event for inputSave
-  inputTitle.addEventListener("keyup", function (event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      inputSave.click();
-    } else 
-    if (event.keyCode === 27) {
-      event.preventDefault();
-      inputCancel.click();
-    }
-  });
 }
 
 function removeUserInput() {
@@ -84,27 +85,27 @@ function createMainContainer() {
 function createMain() {
   const main = document.getElementById("main");
   // Add "Tasks" title DIV
-  var titleDiv = document.createElement("div");
+  const titleDiv = document.createElement("div");
   titleDiv.classList.add("main");
   {
-    var mainTitle = document.createElement("h3");
+    const mainTitle = document.createElement("h3");
     mainTitle.innerText = "Tasks";
     titleDiv.appendChild(mainTitle);
   }
   main.appendChild(titleDiv);
 
   // Add taskList section
-  var taskList = document.createElement("div");
+  const taskList = document.createElement("div");
   taskList.classList.add("main");
   taskList.id = "task-list";
   main.appendChild(taskList);
 
   // Add "Add Task" button div
-  var taskButtonDiv = document.createElement("div");
+  const taskButtonDiv = document.createElement("div");
   taskButtonDiv.classList.add("main");
   {
     // Create button
-    var addTaskButton = document.createElement("li");
+    const addTaskButton = document.createElement("li");
     addTaskButton.id = "task-button";
     addTaskButton.innerText = "Add Task";
     addTaskButton.onclick = function() { createUserInput(); };
@@ -121,17 +122,17 @@ function createMain() {
 
 function addListItem(item) {
   // Get taskList
-  var taskList = document.getElementById("task-list");
+  const taskList = document.getElementById("task-list");
 
   // Create li
-  var li = document.createElement("li");
+  const li = document.createElement("li");
 
   // Create dl
-  var dl = document.createElement("dl");
+  const dl = document.createElement("dl");
   li.appendChild(dl);
 
   // Create dt
-  var dt = document.createElement("dt");
+  const dt = document.createElement("dt");
   dt.innerText = item.title;
 
   // Add "complete" onclick function
@@ -144,8 +145,8 @@ function addListItem(item) {
   dl.appendChild(dt);
 
   // Create dd (details) (if any)
-  for (var detail in item.details) {
-    var dd = document.createElement("dd");
+  for (const detail in item.details) {
+    const dd = document.createElement("dd");
     dd.innerText = item.details[detail];
     dl.appendChild(dd);
   }
@@ -154,8 +155,8 @@ function addListItem(item) {
 }
 
 function populateMain(current) {
-  var taskList = Storage().get()[current].todos;
-  for (var item in taskList) {
+  const taskList = Storage().get()[current].todos;
+  for (const item in taskList) {
     addListItem(taskList[item]);
   }
   // console.log(data[current].todos);

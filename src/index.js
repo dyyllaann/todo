@@ -8,6 +8,6 @@ import calendar from "./calendar.js";
 import sidebar from "./project-directory.js";
 
 header();
-sidebar();
+sidebar().init();
 app().init();
 calendar();

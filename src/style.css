@@ -90,7 +90,11 @@ h3 {
 
 li {
   list-style-type: none;
-  padding-left: 2em;
+  padding: 0.5em;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #3d3267;
+  /* padding-left: 2em; */
 }
 
 .active {
@@ -111,6 +115,11 @@ li {
   justify-content: center;
 }
 
+.color-label {
+  margin-right: auto;
+  font-size: 0.5rem !important;
+}
+
 .complete {
   text-decoration: line-through;
   text-decoration-color: #7864c2;
@@ -124,6 +133,12 @@ li {
   justify-content: space-between;
   align-items: center;
   text-align: center;
+}
+
+.icon-right {
+  margin-left: auto;
+  margin-right: 10px;
+  font-size: 18px;
 }
 
 /* .main {
@@ -160,7 +175,17 @@ li {
 
 .project-title {
   cursor: pointer;
+  display: flex;
+  align-items: center;
   /* background-color: rgba(0,0,0,0.1); */
+}
+
+.project-title > li {
+  justify-content: left;
+}
+
+.project-title > span {
+  margin-left: auto;
 }
 
 .timegrid {
@@ -229,6 +254,13 @@ li {
 
 #projects:last-child {
   margin-left: auto;
+}
+
+#projects-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* justify-content: flex-start; */
 }
 
 #sidebar {
