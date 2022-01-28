@@ -7,13 +7,13 @@ function createDefaultItems() {
   localStorage.setItem("projects", JSON.stringify([]));
 
   // Set default Projects
-  Storage().set(new Project("Todo List 1"));
+  Storage().set(new Project("Todo List 1", "12-12-2021"));
 
   // Set default Task
   var testItem1 = new Item("Welcome to TaskEasy!");
   testItem1.details.push(
-    // "www.dylanjames.is",
-    "www.github.com/dyyllaann",
+    "www.dylanjames.is",
+    "www.github.com/dylanjames",
     "← Check out the creator"
   );
 
@@ -48,7 +48,7 @@ export default function Storage() {
 
   const set = function (project) {
     this.get().push(project);
-    return localStorage.setItem("projects", JSON.stringify(a));
+    return localStorage.setItem("projects", JSON.stringify(this.get()));
   }
 
   const addProject = function (project) {
@@ -87,5 +87,5 @@ export default function Storage() {
     return localStorage.clear();
   }
 
-  return { init, get, set, getActive, setActive, addProject, deleteProject, addTask, deleteTask, inspect, clear };
+  return { init, get, set, getActive, setActive, addProject, deleteProject, addTask, deleteTask, inspect, clear};
 }
