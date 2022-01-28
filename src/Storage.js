@@ -7,13 +7,13 @@ function createDefaultItems() {
   localStorage.setItem("projects", JSON.stringify([]));
 
   // Set default Projects
-  Storage().set(new Project("Todo List 1", "12-12-2021"));
+  Storage().set(new Project("Todo List 1"));
 
   // Set default Task
   var testItem1 = new Item("Welcome to TaskEasy!");
   testItem1.details.push(
-    "www.dylanjames.is",
-    "www.github.com/dylanjames",
+    // "www.dylanjames.is",
+    "www.github.com/dyyllaann",
     "← Check out the creator"
   );
 
@@ -76,7 +76,6 @@ export default function Storage() {
     array[getActive()].todos = array[getActive()].todos.filter(function (obj) {
       return obj.id !== task;
     });
-    console.log(array[getActive()]);
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
@@ -88,26 +87,5 @@ export default function Storage() {
     return localStorage.clear();
   }
 
-  return {
-    // Initiate object
-    init,
-
-    // Get & set
-    get, 
-    set, 
-    getActive,
-    setActive,
-
-    // Project commands
-    addProject, 
-    deleteProject,
-
-    // Item commands
-    addTask, 
-    deleteTask, 
-
-    // Utility commands
-    inspect,
-    clear
-  };
+  return { init, get, set, getActive, setActive, addProject, deleteProject, addTask, deleteTask, inspect, clear };
 }

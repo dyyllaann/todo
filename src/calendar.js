@@ -57,7 +57,24 @@ export default function calendar() {
       }
       table.appendChild(tr);
     }
+    const currentTime = document.createElement("div");
+    currentTime.id = "current-time";
+    currentTime.style.left = "30px";
+    table.appendChild(currentTime);
     tableDiv.appendChild(table);
   }
   calendar.appendChild(tableDiv);
+
+  // Create 'current-time' time marker
+  const currentTime = document.getElementById("current-time");
+  let currentHours = new Date().getHours();
+  let currentMinutes = new Date().getMinutes();
+  let hourPosition = (table.scrollHeight / 24 * currentHours);
+  let minutePosition = (table.scrollHeight / 24 / 60 * currentMinutes);
+  currentTime.style.top = `${hourPosition + minutePosition}px`;
+
+  // Automatically scroll near current time
+  if (hour.getHours() > 12) {
+    table.scrollTop = table.scrollHeight;
+  }
 }

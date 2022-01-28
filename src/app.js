@@ -20,54 +20,56 @@ function createUserInput() {
   const userInputDiv = document.createElement("div");
   userInputDiv.classList.add("main");
   userInputDiv.id = "user-input-container";
-  {
-    const userInputLi = document.createElement("li");
-    userInputLi.id = "user-input";
-    {
-      const inputTitle = document.createElement("input");
-      inputTitle.type = "text";
-      inputTitle.id = "input-title";
-      inputTitle.placeholder = "Enter task name...";
-      userInputLi.appendChild(inputTitle);
 
-      const buttonDiv = document.createElement("div");
-      {
-        const inputCancel = document.createElement("button");
-        inputCancel.innerText = "Cancel";
-        inputCancel.onclick = function () {
-          removeUserInput();
-        };
-        buttonDiv.appendChild(inputCancel);
+  const userInputLi = document.createElement("li");
+  userInputLi.id = "user-input";
+  
+  const inputTitle = document.createElement("input");
+  inputTitle.type = "text";
+  inputTitle.id = "input-title";
+  inputTitle.placeholder = "Enter task name...";
+  userInputLi.appendChild(inputTitle);
 
-        const inputSave = document.createElement("button");
-        inputSave.id = "input-save";
-        inputSave.innerText = "Save";
+  const buttonDiv = document.createElement("div");
+  
+  const inputCancel = document.createElement("button");
+  inputCancel.innerText = "Cancel";
+  inputCancel.onclick = function () {
+    removeUserInput();
+  };
+  buttonDiv.appendChild(inputCancel);
 
-        inputSave.onclick = function () {
-          Storage().addTask(new Item(inputTitle.value));
-          app().refresh();
-          removeUserInput();
-        };
-        buttonDiv.appendChild(inputSave);
-      }
-      userInputLi.appendChild(buttonDiv);
+  const inputSave = document.createElement("button");
+  inputSave.id = "input-save";
+  inputSave.innerText = "Save";
 
-      // Add keyup events
-      inputTitle.addEventListener("keyup", function (event) {
-        const inputSave = document.getElementById("input-save"); 
-        const inputCancel = document.getElementById("input-cancel");
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          inputSave.click();
-        } else if (event.keyCode === 27) {
-          event.preventDefault();
-          inputCancel.click();
-        }
-      });
+  inputSave.onclick = function () {
+    if (inputTitle && inputTitle.value) {
+      Storage().addTask(new Item(inputTitle.value));
+      app().refresh();
+      removeUserInput();
+    };
+  };
+  buttonDiv.appendChild(inputSave);
+  
+  userInputLi.appendChild(buttonDiv);
+
+  // Add keyup events
+  inputTitle.addEventListener("keyup", function (event) {
+    const inputSave = document.getElementById("input-save"); 
+    const inputCancel = document.getElementById("input-cancel");
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      inputSave.click();
+    } else if (event.keyCode === 27) {
+      event.preventDefault();
+      inputCancel.click();
     }
-    userInputDiv.appendChild(userInputLi);
-  }
-  main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
+  });
+    
+  userInputDiv.appendChild(userInputLi);
+  
+  main.children[3].insertAdjacentElement("afterBegin", userInputDiv);
 }
 
 function removeUserInput() {
@@ -195,7 +197,6 @@ export default function app() {
 
     this.clear(taskList); // Clear #task-list content
     this.populate(current); // Populate 
-    console.log(`app() refreshed with Storage().getActive(${Storage().getActive()})`);
   }
 
   return { init, clear, populate, refresh };

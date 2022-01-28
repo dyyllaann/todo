@@ -24,7 +24,7 @@ function createSidebar() {
   );
   tagTitle.insertAdjacentHTML(
     "beforeend",
-    '<span class="material-icons-outlined" id="down-arrow">expand_more</span>'
+    '<span class="material-icons-outlined" id="left-arrow">expand_more</span>'
   );
   sidebar.appendChild(tagTitle);
 
@@ -50,6 +50,7 @@ function createSidebar() {
   // Add "Add New" button
   var addNew = document.createElement("li");
   addNew.classList.add("add-button");
+  addNew.id = "add-new-project";
   addNew.innerText = 'Add New';
   addNew.onclick = function () {
     createProjectInput();
@@ -62,54 +63,67 @@ function createProjectInput() {
   projectInput.classList.add("project-input");
   projectInput.id = "project-input-container";
   {
-    const projectInputLi = document.createElement("li");
-    projectInputLi.id = "projectInput-input";
-    {
-      const inputTitle = document.createElement("input");
-      inputTitle.type = "text";
-      inputTitle.id = "project-input-title";
-      inputTitle.placeholder = "Enter project name...";
-      projectInputLi.appendChild(inputTitle);
-    }
-    {
-      const buttonDiv = document.createElement("div");
-      {
-        const inputCancel = document.createElement("button");
-        inputCancel.innerText = "Cancel";
-        inputCancel.onclick = function () {
-          document.getElementById("project-input-container").remove();
-        };
-        buttonDiv.appendChild(inputCancel);
+		const projectInputLi = document.createElement("li");
+		projectInputLi.id = "projectInput-input";
+
+    const inputTitle = document.createElement("input");
+    inputTitle.type = "text";
+    inputTitle.value = null;
+    inputTitle.id = "project-input-title";
+    inputTitle.placeholder = "Enter project name...";
+    projectInputLi.appendChild(inputTitle);
+	
+    const buttonDiv = document.createElement("div");
+			
+    const inputCancel = document.createElement("button");
+    inputCancel.innerText = "Cancel";
+    inputCancel.id = "project-input-cancel";
+    inputCancel.onclick = function () {
+      document.getElementById("project-input-container").remove();
+    };
+    buttonDiv.appendChild(inputCancel);
+			
+    var inputSave = document.createElement("button");
+    inputSave.innerText = "Save";
+    inputSave.id = "project-input-save";
+    inputSave.onclick = function () {
+      // const projectTitle = document.getElementById("project-input-title");
+
+      if (inputTitle && inputTitle.value) {
+				// Add the project to Storage()
+				Storage().addProject(new Project(inputTitle.value));
+
+				// Remove user input field (Alternative: toggle user-input-container visible/hidden)
+				document.getElementById("project-input-container").remove();
+
+				// Refresh sidebar
+				sidebar().refresh();
+
+				// Simulate click
+				const projects = document.getElementsByClassName("project");
+				projects[projects.length - 1].click();
+			} else return;
+    };
+    buttonDiv.appendChild(inputSave);
+			
+
+    // Add keyup events
+    inputTitle.addEventListener("keyup", function (event) {
+      const inputSave = document.getElementById("project-input-save");
+      const inputCancel = document.getElementById("project-input-cancel");
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        inputSave.click();
+      } else if (event.keyCode === 27) {
+        event.preventDefault();
+        inputCancel.click();
       }
-      {
-        var inputSave = document.createElement("button");
-        inputSave.innerText = "Save";
-        inputSave.onclick = function () {
-					const projectsContainer =
-						document.getElementById("projects-container");
-					const projectTitle = document.getElementById(
-						"project-input-title"
-					).value;
+    });
 
-					// Add the project to Storage()
-					Storage().addProject(new Project(projectTitle));
+    projectInputLi.appendChild(buttonDiv);
 
-					// Remove user input field (Alternative: toggle user-input-container visible/hidden)
-					document.getElementById("project-input-container").remove();
-
-					// Refresh sidebar
-					sidebar().refresh();
-
-          // Simulate click
-          const projects = document.getElementsByClassName("project");
-          projects[projects.length-1].click();
-				};
-        buttonDiv.appendChild(inputSave);
-      }
-      projectInputLi.appendChild(buttonDiv);
-    }
-    projectInput.appendChild(projectInputLi);
-  }
+		projectInput.appendChild(projectInputLi);
+	}
   const projects = document.getElementById("projects-container");
   projects.appendChild(projectInput);
 }
@@ -168,6 +182,27 @@ function addEventListeners() {
   }
 }
 
+function addNavListener() {
+  const arrow = document.getElementById("down-arrow");
+  const projectsContainer = document.getElementById("projects-container");
+  const addNewProject = document.getElementById("add-new-project");
+  let expanded = true;
+
+  arrow.addEventListener("click", function () {
+    if (expanded == true) {
+      arrow.style.transform = "rotate(90deg)";
+      projectsContainer.style.display = "none";
+      addNewProject.style.display = "none";
+      return (expanded = false);
+    } else {
+      arrow.style.transform = "rotate(0deg)";
+      projectsContainer.style.display = "block";
+      addNewProject.style.display = "block";
+      return (expanded = true);
+    }
+  });
+}
+
 export default function sidebar() {
   const init = function() {
     // Set constant variables
@@ -181,6 +216,7 @@ export default function sidebar() {
 
     // Add event listeners
     addEventListeners();
+    addNavListener();
 
     // Set initial project as active by default
     projects[0].classList.add("active");
@@ -204,14 +240,9 @@ export default function sidebar() {
     this.clear(projectsContainer);
 		this.populate();
 
-		// const projects = document.getElementsByClassName("project");
-
     const active = projects.length-1;
 		projects[active].classList.add("active");
 		Storage().setActive(active);
-    console.log(`Storage().setActive() set to ${active}`);
-    console.log(`Confirm ${Storage().getActive()}`);
-
     addEventListeners();
 
     // This doesn't work for some reason.
