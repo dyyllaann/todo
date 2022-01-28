@@ -23,19 +23,10 @@
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
-  /* DARK MODE */
-  /* color:rgba( 255, 255, 255, 0.6 ); */
-  /* LIGHT MODE */
-  /* color: #000; */
 }
 
 body {
   padding: 0 0.5%;
-  /* DARK MODE */
-  background: rgb(32,33,36);
-  /* LIGHT MODE */
-  background: rgb(235, 230, 223);
-  /* KosmoTime CSS */
   background: #f6f7f9;
 }
 
@@ -64,14 +55,15 @@ dt {
 
 h1 {
   font-family: 'Berkshire Swash', cursive;
-  font-size: 2.5rem;
-  color: rgb(255, 255, 255);
-  text-shadow: 
-    0 1px 0 #ccc, 
-    0 2px 0 #c9c9c9, 
-    0 3px 0 #bbb, 
-    0 4px 0 #b9b9b9, 
-    0 5px 0 #aaa, 
+  font-size: 3rem;
+  color: #fff;
+  text-shadow:
+    0 1px 0 #D1C4E9, 
+    0 2px 0 #9575CD, 
+    0 3px 0 #673AB7, 
+    0 4px 0 #512DA8, 
+    0 5px 0 #311B92,
+    
     0 6px 1px rgba(0,0,0,.1), 
     0 0 5px rgba(0,0,0,.1), 
     0 1px 3px rgba(0,0,0,.3), 
@@ -94,7 +86,6 @@ li {
   font-size: 1rem;
   font-weight: 400;
   color: #3d3267;
-  /* padding-left: 2em; */
 }
 
 .active {
@@ -116,6 +107,7 @@ li {
 }
 
 .color-label {
+  margin-left: 5px;
   margin-right: auto;
   font-size: 0.5rem !important;
 }
@@ -136,14 +128,9 @@ li {
 }
 
 .icon-right {
+  font-size: 0.9rem !important;
   margin-left: auto;
-  margin-right: 10px;
-  font-size: 18px;
 }
-
-/* .main {
-  flex: 2;
-} */
 
 .main > li {
   font-weight: 600;
@@ -163,6 +150,12 @@ li {
   margin: 0 5vw;
 }
 
+.material-icons.material-icons-outlined {
+  width: 18px;
+  height: 18px;
+  text-align: center;
+}
+
 .material-icons-outlined {
   margin-right: 10px;
   font-size: 18px;
@@ -173,19 +166,14 @@ li {
   margin-right: 7.5px;
 }
 
-.project-title {
-  cursor: pointer;
+.project {
   display: flex;
   align-items: center;
-  /* background-color: rgba(0,0,0,0.1); */
+  cursor: pointer;
 }
 
-.project-title > li {
-  justify-content: left;
-}
-
-.project-title > span {
-  margin-left: auto;
+.project-title {
+  width: 100%;
 }
 
 .timegrid {
@@ -208,15 +196,7 @@ li {
   box-shadow: 0 4px 8px 0 rgba( 0, 0, 0, 0.4 );
   backdrop-filter: blur( 15px );
   -webkit-backdrop-filter: blur( 15px );
-
-  /* DARK MODE */
-  background: rgba( 48, 49, 52, 0.6 );
-  /* LIGHT MODE */
-  background: rgba( 250, 250, 250, 0.8);
-
-  /* KosmoTime CSS */
   background-color: #f7f8fa;
-  
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -247,20 +227,22 @@ li {
   padding: 10px;
 }
 
-#projects {
-  display: flex;
-  align-items: center;
-}
-
-#projects:last-child {
-  margin-left: auto;
-}
-
 #projects-container {
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* justify-content: flex-start; */
+}
+
+#projects-container > li {
+  display: flex;
+}
+
+#projects-container > li > * {
+  margin: auto;
+}
+
+#projects-container > li > div {
+  display: block;
+  margin-left: auto !important;
 }
 
 #sidebar {
@@ -273,16 +255,13 @@ li {
 
 #sidebar > li, h3 {
   cursor: pointer;
-}
-
-#tags {
   display: flex;
   align-items: center;
 }
 
-#tags:last-child {
+/* #tags:last-child {
   margin-left: auto;
-}
+} */
 
 #tags > span {
   transform: rotate(90deg);
@@ -292,7 +271,6 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* text-align: center; */
   font-weight: 500;
   color: #aaa;
   cursor: pointer;
@@ -318,3 +296,10 @@ li {
 .task-button-active {
   background-color: #fff;
 }
+
+/* .icon-right {
+  text-align: right !important;
+  display: block;
+  margin-left: auto !important;
+  font-size: 14px;
+} */

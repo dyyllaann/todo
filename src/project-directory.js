@@ -85,20 +85,25 @@ function createProjectInput() {
         var inputSave = document.createElement("button");
         inputSave.innerText = "Save";
         inputSave.onclick = function () {
-          const projectsContainer = document.getElementById("projects-container");
-          const projectTitle = document.getElementById("project-input-title").value;
+					const projectsContainer =
+						document.getElementById("projects-container");
+					const projectTitle = document.getElementById(
+						"project-input-title"
+					).value;
 
-          Storage().addProject(new Project(projectTitle));
+					// Add the project to Storage()
+					Storage().addProject(new Project(projectTitle));
 
-          // This part doesn't work... why?!
-          const project = document.createElement("li");
-          project.classList.add("project-title");
-          project.innterText = projectTitle;
-          projectsContainer.appendChild(project);
+					// Remove user input field (Alternative: toggle user-input-container visible/hidden)
+					document.getElementById("project-input-container").remove();
 
-          // Remove user input field (Alternative: toggle user-input-container visible/hidden)
-          document.getElementById("project-input-container").remove();
-        };
+					// Refresh sidebar
+					sidebar().refresh();
+
+          // Simulate click
+          const projects = document.getElementsByClassName("project");
+          projects[projects.length-1].click();
+				};
         buttonDiv.appendChild(inputSave);
       }
       projectInputLi.appendChild(buttonDiv);
@@ -110,71 +115,118 @@ function createProjectInput() {
 }
 
 function addProjectItem(item) {
+  // set constant variables
   const projectsContainer = document.getElementById("projects-container");
   const projectData = Storage().get();
 
-  var project = document.createElement("li");
-  project.classList.add("project-title");
+  // Create h3 element
+  const project = document.createElement("h3");
   project.id = projectData[item].id;
   project.innerText = projectData[item].project;
+  project.classList.add("project");
+  project.insertAdjacentHTML(
+    "afterbegin",
+    '<span class="material-icons icon-left color-label">circle</span>'
+  );
+  project.insertAdjacentHTML(
+    "beforeend",
+    '<span class="material-icons-outlined icon-right delete-project-btn">clear</span>'
+  );
   projectsContainer.appendChild(project);
-
-     project.insertAdjacentHTML(
-       "afterbegin",
-       '<span class="material-icons icon-left color-label">circle</span>'
-     );
-
-   project.insertAdjacentHTML(
-     "beforeend",
-     '<span class="material-icons-outlined icon-right" id="project-delete-button">clear</span>'
-   );
 }
 
-function populateSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  const projectData = Storage().get();
+function addEventListeners() {
+  // Set constant variables
+	const projects = document.getElementsByClassName("project");
+  const deleteProject = document.getElementsByClassName("delete-project-btn");
 
-  // Add items in importData()
-  for (var item in projectData) {
-    addProjectItem(item);
-  }
+	for (var i = 0; i < projects.length; i++) {
+		projects[i].addEventListener("click", function () {
+        // Toggle "active" class
+        const active = document.getElementsByClassName("active")[0]; // Set const to first element containing "active" class
+        active.className = active.className.replace(" active", ""); 
+        this.className += " active";
 
-  // Set initial project as active by default
-  {
-    var projectList = document.getElementById("sidebar");
-    var projects = projectList.getElementsByClassName("project-title");
-    projects[0].classList.add("active");
-    Storage().setActive(0);
-  }
+        // Set Storage().setActive() to this
+        Storage().setActive(this);
 
-  // Active selector
-  for (var i = 0; i < projects.length; i++) {
-    projects[i].addEventListener("click", function () {
-      var current = document.getElementsByClassName("active");
-      current[0].className = current[0].className.replace(" active", "");
-      this.className += " active";
-
-      projectSelector();
-      console.log(Storage().get()[Storage().getActive()]);
-      app().refresh(Storage().getActive());
+        // Refresh main #task-list with active contents
+        app().refresh(Storage().getActive());
     });
-  }
-}
+	}
 
-function projectSelector() {
-  const projectsContainer = document.getElementById("projects-container");
-  for (let i = 0; i < projectsContainer.children.length; i++) {
-    if (projectsContainer.children[i].classList.contains("active")) {
-      return Storage().setActive(i);
-    }
+  for (var i = 0; i < deleteProject.length; i++) {
+    deleteProject[i].addEventListener("click", function(e) {
+			// Delete this item in Storage()
+			Storage().deleteProject(this.parentElement);
+
+			// Refresh sidebar
+			sidebar().refresh();
+
+			return e.stopPropagation();
+		});
   }
 }
 
 export default function sidebar() {
   const init = function() {
+    // Set constant variables
+    const projects = document.getElementsByClassName("project");
+
+    // Create sidebar
     createSidebar();
-    populateSidebar();
+
+    // Populate sidebar
+    this.populate();
+
+    // Add event listeners
+    addEventListeners();
+
+    // Set initial project as active by default
+    projects[0].classList.add("active");
+    Storage().setActive(0);
   }
 
-  return { init };
+  const select = function() {
+
+  }
+
+  const clear = function(parent) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+
+  const refresh = function() {
+		const projectsContainer = document.getElementById("projects-container");
+		const projects = document.getElementsByClassName("project");
+
+    this.clear(projectsContainer);
+		this.populate();
+
+		// const projects = document.getElementsByClassName("project");
+
+    const active = projects.length-1;
+		projects[active].classList.add("active");
+		Storage().setActive(active);
+    console.log(`Storage().setActive() set to ${active}`);
+    console.log(`Confirm ${Storage().getActive()}`);
+
+    addEventListeners();
+
+    // This doesn't work for some reason.
+    app().refresh(Storage().getActive());
+	}
+
+  const deleteProject = function() {
+    return Storage().deleteProject(this);
+  }
+
+  const populate = function() {
+    for (var item in Storage().get()) {
+      addProjectItem(item);
+    }
+  }
+
+  return { init, select, clear, refresh, deleteProject, populate };
 }

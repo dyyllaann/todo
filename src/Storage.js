@@ -8,17 +8,16 @@ function createDefaultItems() {
 
   // Set default Projects
   Storage().set(new Project("Todo List 1", "12-12-2021"));
-  Storage().set(new Project("Todo List 2", "12-12-2021"));
 
-  // Set default Tasks
+  // Set default Task
   var testItem1 = new Item("Welcome to TaskEasy!");
-  testItem1.details.push("www.dylanjames.is", "www.github.com/dylanjames", "<- Check out the creator");
-
-  var testItem2 = new Item("Go to the store", "December 20, 2021");
-  testItem2.details.push("Milk", "Eggs", "Cheese");
+  testItem1.details.push(
+    "www.dylanjames.is",
+    "www.github.com/dylanjames",
+    "← Check out the creator"
+  );
 
   Storage().addTask(testItem1, 0);
-  Storage().addTask(testItem2, 0);
 }
 
 export default function Storage() {
@@ -33,7 +32,14 @@ export default function Storage() {
   }
 
   const setActive = function (active) {
-    return localStorage.setItem("active", JSON.stringify(active));
+    const projects = JSON.parse(localStorage.getItem("projects"));
+    // Why would I do it this way?
+    for (var i in projects) {
+      if (active.id == projects[i].id) {
+        return localStorage.setItem("active", JSON.stringify(i));
+      }
+    }
+    return localStorage.setItem("active", 0);
   }
 
   const get = function () {
@@ -41,14 +47,21 @@ export default function Storage() {
   }
 
   const set = function (project) {
-    const a = this.get();
-    a.push(project);
+    this.get().push(project);
     return localStorage.setItem("projects", JSON.stringify(a));
   }
 
   const addProject = function (project) {
-    const array = JSON.parse(localStorage.getItem("projects"));
-    array.push(project);
+    const projects = JSON.parse(localStorage.getItem("projects"));
+    projects.push(project);
+    return localStorage.setItem("projects", JSON.stringify(projects));
+  }
+
+  const deleteProject = function (project) {
+    let array = JSON.parse(localStorage.getItem("projects"));
+    array = array.filter(function (obj) {
+      return obj.id !== project.id;
+    });
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
@@ -87,13 +100,14 @@ export default function Storage() {
 
     // Project commands
     addProject, 
+    deleteProject,
 
     // Item commands
     addTask, 
     deleteTask, 
 
     // Utility commands
-    inspect, 
+    inspect,
     clear
   };
 }

@@ -13,8 +13,8 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
   }
 };
 
+// Create storage object
 Storage().init();
-const data = Storage().get();
 
 function createUserInput() {
   const userInputDiv = document.createElement("div");
@@ -74,16 +74,13 @@ function removeUserInput() {
   document.getElementById("user-input-container").remove();
 }
 
-function createMainContainer() {
-  // Create main TASKS section
-  const main = document.createElement("div");
-  main.classList.add("main-container");
-  main.id = "main";
-  content.appendChild(main);
-}
-
 function createMain() {
-  const main = document.getElementById("main");
+  // Create main TASKS section
+  const mainContainer = document.createElement("div");
+  mainContainer.classList.add("main-container");
+  mainContainer.id = "main";
+  content.appendChild(mainContainer);
+
   // Add "Tasks" title DIV
   const titleDiv = document.createElement("div");
   titleDiv.classList.add("main");
@@ -92,13 +89,20 @@ function createMain() {
     mainTitle.innerText = "Tasks";
     titleDiv.appendChild(mainTitle);
   }
-  main.appendChild(titleDiv);
+  mainContainer.appendChild(titleDiv);
+
+  // Add default message
+  const defaultMessage = document.createElement("h3");
+  defaultMessage.id = "defaultMessage";
+  defaultMessage.innerText = "No tasks found. Click 'Add Task' to create one now.";
+  defaultMessage.style.display = "none";
+  mainContainer.appendChild(defaultMessage);
 
   // Add taskList section
   const taskList = document.createElement("div");
   taskList.classList.add("main");
   taskList.id = "task-list";
-  main.appendChild(taskList);
+  mainContainer.appendChild(taskList);
 
   // Add "Add Task" button div
   const taskButtonDiv = document.createElement("div");
@@ -108,7 +112,9 @@ function createMain() {
     const addTaskButton = document.createElement("li");
     addTaskButton.id = "task-button";
     addTaskButton.innerText = "Add Task";
-    addTaskButton.onclick = function() { createUserInput(); };
+    addTaskButton.onclick = function () {
+      createUserInput();
+    };
     taskButtonDiv.appendChild(addTaskButton);
 
     // Add icon
@@ -117,7 +123,7 @@ function createMain() {
       '<i class="material-icons-outlined">add_task</i>'
     );
   }
-  main.appendChild(taskButtonDiv);
+  mainContainer.appendChild(taskButtonDiv);
 }
 
 function addListItem(item) {
@@ -129,6 +135,7 @@ function addListItem(item) {
 
   // Create dl
   const dl = document.createElement("dl");
+
   li.appendChild(dl);
 
   // Create dt
@@ -154,37 +161,42 @@ function addListItem(item) {
   taskList.appendChild(li);
 }
 
-function populateMain(current) {
-  const taskList = Storage().get()[current].todos;
-  for (const item in taskList) {
-    addListItem(taskList[item]);
-  }
-  // console.log(data[current].todos);
-  console.log(Storage().get()[current].todos);
-}
-
-function removeAllChildNodes(parent) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
-  console.log("Child nodes removed.");
-}
-
 export default function app() {
   const init = function () {
-    createMainContainer();
     createMain();
-    populateMain(0); // Populate Main with tasks from first project
+    this.populate(0);
   };
 
-  const refresh = function () {
-    const current = Storage().getActive();
-    const main = document.getElementById("task-list");
-    removeAllChildNodes(main);
-    populateMain(current);
-    // console.log(Storage().get()[current].todos);
-    console.log("refreshed task-list");
+  const populate = function (current) {
+    const tasks = Storage().get()[current].todos;
+    const defaultMessage = document.getElementById("defaultMessage");
+
+    for (const item in tasks) {
+      addListItem(tasks[item]);
+    }
+
+    if (tasks.length == 0) {
+      defaultMessage.style.display = "block";
+    } else {
+      defaultMessage.style.display = "none";
+    }
   }
 
-  return { init, refresh };
+  const clear = function (parent) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+
+  const refresh = function () {
+    // Set const variables
+    const current = Storage().getActive();
+    const taskList = document.getElementById("task-list");
+
+    this.clear(taskList); // Clear #task-list content
+    this.populate(current); // Populate 
+    console.log(`app() refreshed with Storage().getActive(${Storage().getActive()})`);
+  }
+
+  return { init, clear, populate, refresh };
 }
