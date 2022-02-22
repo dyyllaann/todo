@@ -13,9 +13,6 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
   }
 };
 
-// Create storage object
-Storage().init();
-
 function createUserInput() {
   const userInputDiv = document.createElement("div");
   userInputDiv.classList.add("main");
@@ -69,7 +66,7 @@ function createUserInput() {
     
   userInputDiv.appendChild(userInputLi);
   
-  main.children[3].insertAdjacentElement("afterBegin", userInputDiv);
+  main.children[2].insertAdjacentElement("afterBegin", userInputDiv);
 }
 
 function removeUserInput() {
@@ -77,28 +74,27 @@ function removeUserInput() {
 }
 
 function createMain() {
-  // Create main TASKS section
+  // Create main tasks container
   const mainContainer = document.createElement("div");
   mainContainer.classList.add("main-container");
   mainContainer.id = "main";
   content.appendChild(mainContainer);
 
-  // Add "Tasks" title DIV
+  // Add tasks title DIV (hidden)
   const titleDiv = document.createElement("div");
   titleDiv.classList.add("main");
-  {
-    const mainTitle = document.createElement("h3");
-    mainTitle.innerText = "Tasks";
-    titleDiv.appendChild(mainTitle);
-  }
+  titleDiv.id = "task-list-title";
+  const mainTitle = document.createElement("h3");
+  mainTitle.innerText = "Tasks";
+  titleDiv.appendChild(mainTitle);
   mainContainer.appendChild(titleDiv);
 
-  // Add default message
+  // Add default message (hidden)
   const defaultMessage = document.createElement("h3");
   defaultMessage.id = "defaultMessage";
   defaultMessage.innerText = "No tasks found. Click 'Add Task' to create one now.";
   defaultMessage.style.display = "none";
-  mainContainer.appendChild(defaultMessage);
+  titleDiv.appendChild(defaultMessage);
 
   // Add taskList section
   const taskList = document.createElement("div");
@@ -109,6 +105,7 @@ function createMain() {
   // Add "Add Task" button div
   const taskButtonDiv = document.createElement("div");
   taskButtonDiv.classList.add("main");
+  taskButtonDiv.id = "task-button-div";
   {
     // Create button
     const addTaskButton = document.createElement("li");
@@ -166,23 +163,33 @@ function addListItem(item) {
 export default function app() {
   const init = function () {
     createMain();
-    this.populate(0);
+    if (Storage().get()) {
+      this.populate(0);
+    }
   };
 
   const populate = function (current) {
-    const tasks = Storage().get()[current].todos;
-    const defaultMessage = document.getElementById("defaultMessage");
+    const main = document.getElementById("main")
 
-    for (const item in tasks) {
-      addListItem(tasks[item]);
-    }
+    if (Storage().get().length < 1) {
+      main.style.visibility = "hidden";
+    } else { main.style.visibility = "visible"}
 
-    if (tasks.length == 0) {
-      defaultMessage.style.display = "block";
-    } else {
-      defaultMessage.style.display = "none";
+    if (Storage().get()[current]) {
+      const tasks = Storage().get()[current].todos;
+      const defaultMessage = document.getElementById("defaultMessage");
+
+      for (const item in tasks) {
+        addListItem(tasks[item]);
+      }
+
+      if (tasks.length == 0) {
+        defaultMessage.style.display = "block";
+      } else {
+        defaultMessage.style.display = "none";
+      }
     }
-  }
+	};
 
   const clear = function (parent) {
     while (parent.firstChild) {
@@ -191,13 +198,17 @@ export default function app() {
   }
 
   const refresh = function () {
-    // Set const variables
-    const current = Storage().getActive();
-    const taskList = document.getElementById("task-list");
+		// Set const variables
+		const current = Storage().getActive();
+		const taskList = document.getElementById("task-list");
 
-    this.clear(taskList); // Clear #task-list content
-    this.populate(current); // Populate 
-  }
+		// Clear #task-list content
+		this.clear(taskList);
+
+		if (current) {
+			this.populate(current); // Populate
+		}
+	}
 
   return { init, clear, populate, refresh };
 }

@@ -218,9 +218,11 @@ export default function sidebar() {
     addEventListeners();
     addNavListener();
 
-    // Set initial project as active by default
-    projects[0].classList.add("active");
-    Storage().setActive(0);
+    // If a project exists, set initial project as active by default
+    if (projects.length > 0) {
+      projects[0].classList.add("active");
+      Storage().setActive(0);
+    }
   }
 
   const select = function() {
@@ -240,12 +242,14 @@ export default function sidebar() {
     this.clear(projectsContainer);
 		this.populate();
 
-    const active = projects.length-1;
-		projects[active].classList.add("active");
-		Storage().setActive(active);
-    addEventListeners();
+    if (projects.length > 0) {
+			const active = projects.length - 1;
+			projects[active].classList.add("active");
+			Storage().setActive(active);
+			addEventListeners();
 
-    // This doesn't work for some reason.
+			// This doesn't work for some reason. Or does it?
+		}
     app().refresh(Storage().getActive());
 	}
 

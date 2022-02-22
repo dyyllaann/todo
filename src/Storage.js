@@ -3,6 +3,8 @@ import Item from "./Todo-logic.js";
 
 // Set data const
 function createDefaultItems() {
+  console.log(`createDefaultItems(): Storage().get() = ${Storage().get()}`);
+
   // Create empty array
   localStorage.setItem("projects", JSON.stringify([]));
 
@@ -21,14 +23,19 @@ function createDefaultItems() {
 }
 
 export default function Storage() {
-  const init = function () {
-    if (get() == null) {
-      return createDefaultItems();
-    }
-  }
+  const init = (function () {
+    // Load default if never initiated before. 
+    //
+    // this.get() is an empty array.
+    // this.setActive();
+    // console.log(this.get()); // Proves that this.get() contains an empty array.
+    // if (this.get().length == 0) {
+    //   return createDefaultItems();
+    // }
+  });
 
   const getActive = function () {
-    return JSON.parse(localStorage.getItem("active")) || 0;
+    return JSON.parse(localStorage.getItem("active") || 0);
   }
 
   const setActive = function (active) {
@@ -43,7 +50,7 @@ export default function Storage() {
   }
 
   const get = function () {
-    return JSON.parse(localStorage.getItem("projects" || "[]"));
+    return JSON.parse(localStorage.getItem("projects")) || []; // Returns "projects" or empty array
   }
 
   const set = function (project) {
@@ -52,7 +59,7 @@ export default function Storage() {
   }
 
   const addProject = function (project) {
-    const projects = JSON.parse(localStorage.getItem("projects"));
+    const projects = JSON.parse(localStorage.getItem("projects")) || [];
     projects.push(project);
     return localStorage.setItem("projects", JSON.stringify(projects));
   }
@@ -66,8 +73,13 @@ export default function Storage() {
   }
 
   const addTask = function (task) {
-    const array = JSON.parse(localStorage.getItem("projects"));
-    array[getActive()].todos.push(task);
+    const array = JSON.parse(localStorage.getItem("projects")) || [];
+    // console.log(array);
+    if (array.length < 1) {
+      return console.log("There isn't an array here!");
+    } else {
+      array[this.getActive()].todos.push(task);
+    }
     return localStorage.setItem("projects", JSON.stringify(array));
   }
 
